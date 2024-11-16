@@ -1,25 +1,45 @@
 package com.reservaquadra.reservaquadra.entity;
 
-import java.util.List;
+import com.reservaquadra.reservaquadra.enums.StatusJogador;
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
-public class Jogador {
+@Table(name = "tb_jogador")
+public class Jogador implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
-    @Column
+    @Column(nullable = false)
     private String contato;
 
-    @ManyToMany(mappedBy = "jogadores")
-    private List<Reserva> reservas;
+    @ManyToOne
+    private Equipe equipe;
 
-    // Getters e Setters
+    @Enumerated(EnumType.STRING)
+    private StatusJogador statusJogador;
+
+    //  @ManyToMany(mappedBy = "jogadores")
+    //  private List<Reserva> reservas;
+
+    public Jogador() {
+    }
+
+    public Jogador(String nome, String contato) {
+        this.nome = nome;
+        this.contato = contato;
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,11 +60,19 @@ public class Jogador {
         this.contato = contato;
     }
 
-    public List<Reserva> getReservas() {
-        return reservas;
+    public StatusJogador getPlayerStatus() {
+        return statusJogador;
     }
 
-    public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
+    public void setPlayerStatus(StatusJogador statusJogador) {
+        this.statusJogador = statusJogador;
     }
+
+    //  public List<Reserva> getReservas() {
+    //      return reservas;
+    // }
+
+    //  public void setReservas(List<Reserva> reservas) {
+    //     this.reservas = reservas;
+    //  }
 }
