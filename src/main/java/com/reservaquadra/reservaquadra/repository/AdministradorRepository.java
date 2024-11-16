@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.reservaquadra.reservaquadra.entity.Administrador;
+import com.reservaquadra.reservaquadra.entity.Usuario;
 
 @Repository
-public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
+public interface AdministradorRepository extends JpaRepository<Usuario, Long> {
 
 	
-	List<Administrador> findByNome(String nome);
+	List<Usuario> findByNome(String nome);
 }

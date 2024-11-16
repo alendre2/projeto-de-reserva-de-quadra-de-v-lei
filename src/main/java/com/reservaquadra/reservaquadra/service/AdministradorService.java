@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.reservaquadra.reservaquadra.entity.Administrador;
+import com.reservaquadra.reservaquadra.entity.Usuario;
 import com.reservaquadra.reservaquadra.exception.EntidadeEmUsoException;
 import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
 import com.reservaquadra.reservaquadra.repository.AdministradorRepository;
@@ -19,26 +19,26 @@ public class AdministradorService {
     @Autowired
     private AdministradorRepository administradorRepository;
 
-    public List<Administrador> listar() {
-        List<Administrador> administrador = administradorRepository.findAll();
-        return administrador;
+    public List<Usuario> listar() {
+        List<Usuario> usuario = administradorRepository.findAll();
+        return usuario;
     }
 
-    public Administrador buscarOuFalhar(Long id) {
+    public Usuario buscarOuFalhar(Long id) {
         return administradorRepository.findById(id)
         		.orElseThrow(() -> new EntidadeNaoEncontradaException(
         				String.format("Não existe um cadastro de Administrador com o codigo %d.", id)));
     }
 
     @Transactional
-    public Administrador salvar (Administrador administrador) {
-        return administradorRepository.save(administrador);
+    public Usuario salvar (Usuario usuario) {
+        return administradorRepository.save(usuario);
     }
 
     @Transactional
     public void remover(Long id) {
     	try {
-        Administrador administrador = buscarOuFalhar(id);
+        Usuario usuario = buscarOuFalhar(id);
         administradorRepository.deleteById(id);
         administradorRepository.flush();
     	}catch(DataIntegrityViolationException e) {
@@ -47,7 +47,7 @@ public class AdministradorService {
 		}
     }
     
-    public List<Administrador> buscarNome(String nome){
+    public List<Usuario> buscarNome(String nome){
 		return administradorRepository.findByNome(nome);
 	}
 }

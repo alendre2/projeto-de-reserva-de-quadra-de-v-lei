@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +20,13 @@ public class Equipe implements Serializable {
 
     @Column(nullable = false)
     private String nome;
+
+    @ManyToOne
+    @JoinColumn(name = "aluguel_id", nullable = false)
+    private Aluguel aluguels;
+
+    @OneToMany
+    private final List<Jogador> jogadores = new ArrayList<>();
 
     public Equipe() {
     }
@@ -36,6 +45,18 @@ public class Equipe implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Aluguel getAluguels() {
+        return aluguels;
+    }
+
+    public void setAluguels(Aluguel aluguels) {
+        this.aluguels = aluguels;
+    }
+
+    public List<Jogador> getJogadores() {
+        return jogadores;
     }
 
     @Override

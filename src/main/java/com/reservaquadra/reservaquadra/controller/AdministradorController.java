@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.reservaquadra.reservaquadra.entity.Administrador;
+import com.reservaquadra.reservaquadra.entity.Usuario;
 import com.reservaquadra.reservaquadra.exception.EntidadeEmUsoException;
 import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
 import com.reservaquadra.reservaquadra.service.AdministradorService;
@@ -33,27 +33,27 @@ public class AdministradorController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Administrador> listar() {
+    public List<Usuario> listar() {
         return administradorService.listar();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Administrador> buscar(@PathVariable Long id) {
+    public ResponseEntity<Usuario> buscar(@PathVariable Long id) {
         try {
-            Administrador administrador = administradorService.buscarOuFalhar(id);
-            return ResponseEntity.status(HttpStatus.OK).body(administrador);
+            Usuario usuario = administradorService.buscarOuFalhar(id);
+            return ResponseEntity.status(HttpStatus.OK).body(usuario);
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Administrador> atualizar(@PathVariable Long id, @RequestBody Administrador administrador) {
+    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
         try {
-            Administrador administradorAtual = administradorService.buscarOuFalhar(id);
-            BeanUtils.copyProperties(administrador, administradorAtual, "id");
-            administradorAtual = administradorService.salvar(administradorAtual);
-            return ResponseEntity.status(HttpStatus.OK).body(administradorAtual);
+            Usuario usuarioAtual = administradorService.buscarOuFalhar(id);
+            BeanUtils.copyProperties(usuario, usuarioAtual, "id");
+            usuarioAtual = administradorService.salvar(usuarioAtual);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioAtual);
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
         }
@@ -73,13 +73,13 @@ public class AdministradorController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/consultas/nome")
-    public List<Administrador> buscarNome(@RequestParam String nome) {
+    public List<Usuario> buscarNome(@RequestParam String nome) {
         return administradorService.buscarNome(nome);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Administrador adicionar(@RequestBody Administrador administrador) {
-        return administradorService.salvar(administrador);
+    public Usuario adicionar(@RequestBody Usuario usuario) {
+        return administradorService.salvar(usuario);
     }
 }

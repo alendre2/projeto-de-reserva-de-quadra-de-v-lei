@@ -1,10 +1,18 @@
 package com.reservaquadra.reservaquadra.entity;
 
 import jakarta.persistence.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Quadra {
+@Table(name = "tb_quadra")
+public class Quadra implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +24,27 @@ public class Quadra {
     @Column
     private String tipo;
 
-    @Column
-    private String localizacao;
 
     @ManyToOne
-    private Administrador administrador;
+    private EnderecoQuadra enderecoQuadra;
+
+    @ManyToOne
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "quadra")
-    private List<Reserva> reservas;
+    private List<Aluguel> aluguels;
 
-    // Getters e Setters
+    public Quadra() {
+    }
+
+    public Quadra(Long id, String nome, String tipo, EnderecoQuadra enderecoQuadra, Usuario usuario) {
+        this.id = id;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.enderecoQuadra = enderecoQuadra;
+        this.usuario = usuario;
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,27 +65,35 @@ public class Quadra {
         this.tipo = tipo;
     }
 
-    public String getLocalizacao() {
-        return localizacao;
+    public EnderecoQuadra getEnderecoQuadra() {
+        return enderecoQuadra;
     }
 
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
+    public void setEnderecoQuadra(EnderecoQuadra enderecoQuadra) {
+        this.enderecoQuadra = enderecoQuadra;
     }
 
-    public Administrador getAdministrador() {
-        return administrador;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setAdministrador(Administrador administrador) {
-        this.administrador = administrador;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public List<Reserva> getReservas() {
-        return reservas;
+    public List<Aluguel> getAluguels() {
+        return aluguels;
     }
 
-    public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Quadra quadra = (Quadra) o;
+        return Objects.equals(id, quadra.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

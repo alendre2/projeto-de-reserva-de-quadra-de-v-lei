@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.reservaquadra.reservaquadra.entity.Administrador;
-import com.reservaquadra.reservaquadra.entity.Reserva;
+import com.reservaquadra.reservaquadra.entity.Aluguel;
 import com.reservaquadra.reservaquadra.exception.EntidadeEmUsoException;
 import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
 import com.reservaquadra.reservaquadra.repository.ReservaRepository;
@@ -20,26 +19,26 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public List<Reserva> listar() {
+    public List<Aluguel> listar() {
         return reservaRepository.findAll();
     }
 
-    public Reserva buscarOuFalhar(Long id) {
+    public Aluguel buscarOuFalhar(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(
                         String.format("Não existe um cadastro de Reserva com o código %d.", id)));
     }
 
     @Transactional
-    public Reserva salvar(Reserva reserva) {
-        return reservaRepository.save(reserva);
+    public Aluguel salvar(Aluguel aluguel) {
+        return reservaRepository.save(aluguel);
     }
 
     @Transactional
     public void remover(Long id) {
         try {
-            Reserva reserva = buscarOuFalhar(id);
-            reservaRepository.delete(reserva);
+            Aluguel aluguel = buscarOuFalhar(id);
+            reservaRepository.delete(aluguel);
             reservaRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(

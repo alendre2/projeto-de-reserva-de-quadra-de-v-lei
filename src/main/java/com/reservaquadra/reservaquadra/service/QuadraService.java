@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.reservaquadra.reservaquadra.entity.Administrador;
 import com.reservaquadra.reservaquadra.entity.Quadra;
 import com.reservaquadra.reservaquadra.exception.EntidadeEmUsoException;
 import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;

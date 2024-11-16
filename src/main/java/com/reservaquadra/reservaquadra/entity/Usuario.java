@@ -1,6 +1,5 @@
 package com.reservaquadra.reservaquadra.entity;
 
-import com.reservaquadra.reservaquadra.enums.StatusJogador;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -8,8 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_jogador")
-public class Jogador implements Serializable {
+public class Usuario implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -22,20 +20,17 @@ public class Jogador implements Serializable {
     private String nome;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String contato;
 
-    @ManyToOne
-    @JoinColumn(name = "equipe_id")
-    private Equipe equipe;
-
-    @Enumerated(EnumType.STRING)
-    private StatusJogador statusJogador;
-
-    public Jogador() {
+    public Usuario() {
     }
 
-    public Jogador(String nome, String contato) {
+    public Usuario(String nome, String email, String contato) {
         this.nome = nome;
+        this.email = email;
         this.contato = contato;
     }
 
@@ -51,6 +46,14 @@ public class Jogador implements Serializable {
         this.nome = nome;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getContato() {
         return contato;
     }
@@ -59,19 +62,25 @@ public class Jogador implements Serializable {
         this.contato = contato;
     }
 
-    public StatusJogador getPlayerStatus() {
-        return statusJogador;
-    }
+    public enum admin {
+        ADMINISTRADOR(1L);
 
-    public void setPlayerStatus(StatusJogador statusJogador) {
-        this.statusJogador = statusJogador;
+        private final long id;
+
+        admin(long id) {
+            this.id = id;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Jogador jogador = (Jogador) o;
-        return Objects.equals(id, jogador.id);
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id);
     }
 
     @Override
