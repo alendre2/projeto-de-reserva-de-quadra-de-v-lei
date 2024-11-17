@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping(value = "/administradores")
+@RequestMapping(value = "/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

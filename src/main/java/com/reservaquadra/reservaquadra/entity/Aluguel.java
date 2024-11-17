@@ -40,7 +40,7 @@ public class Aluguel implements Serializable {
     private Quadra quadra;
 
     @OneToMany
-    List<Equipe> equipes = new ArrayList<>();
+    private final List<Equipe> equipes = new ArrayList<>();
 
     public Aluguel() {
     }
