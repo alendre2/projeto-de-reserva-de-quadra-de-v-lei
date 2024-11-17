@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface JogadorRepository extends JpaRepository<Jogador, Long> {
 	
-    List<Jogador> findByNome(String nome);  // Método para buscar Jogador por nome
+    List<Jogador> findByNome(String nome);  //Metodo para buscar Jogador por nome
 }

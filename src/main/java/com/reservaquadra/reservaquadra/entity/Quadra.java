@@ -24,7 +24,6 @@ public class Quadra implements Serializable {
     @Column
     private String tipo;
 
-
     @ManyToOne
     private EnderecoQuadra enderecoQuadra;
 

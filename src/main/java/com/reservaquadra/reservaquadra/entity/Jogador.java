@@ -34,9 +34,11 @@ public class Jogador implements Serializable {
     public Jogador() {
     }
 
-    public Jogador(String nome, String contato) {
+    public Jogador(String nome, String contato, Equipe equipe, StatusJogador statusJogador) {
         this.nome = nome;
         this.contato = contato;
+        this.equipe = equipe;
+        this.statusJogador = statusJogador;
     }
 
     public Long getId() {
