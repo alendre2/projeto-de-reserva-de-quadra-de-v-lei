@@ -33,6 +33,7 @@ public class UsuarioController {
 
     @DeleteMapping(value = "/{usuarioId}")
     public ResponseEntity<Void> deletar(@PathVariable Long usuarioId) {
+        usuarioService.deletar(usuarioId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
