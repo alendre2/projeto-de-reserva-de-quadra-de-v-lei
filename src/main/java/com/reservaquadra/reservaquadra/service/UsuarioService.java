@@ -13,54 +13,54 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final UsuarioMapStruct usuarioMapStruct;
+    private final UsuarioRepository repository;
+    private final UsuarioMapStruct mapStruct;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapStruct usuarioMapStruct) {
-        this.usuarioRepository = usuarioRepository;
-        this.usuarioMapStruct = usuarioMapStruct;
+    public UsuarioService(UsuarioRepository repository, UsuarioMapStruct mapStruct) {
+        this.repository = repository;
+        this.mapStruct = mapStruct;
     }
 
     @Transactional
     public UsuarioResponseDto criar(UsuarioRequestDto requestDto) {
-        return usuarioMapStruct.converterParaResponseDto(
-                usuarioMapStruct.converterParaRequestDto(
-                        usuarioRepository.save(usuarioMapStruct.converterParaUsuario(requestDto))
+        return mapStruct.converterParaResponseDto(
+                mapStruct.converterParaRequestDto(
+                        repository.save(mapStruct.converterParaUsuario(requestDto))
                 )
         );
     }
 
     @Transactional
-    public void atualizar(Long id, UsuarioRequestDto requestDto) {
-        usuarioRepository.findById(id)
+    public UsuarioResponseDto atualizar(Long id, UsuarioRequestDto requestDto) {
+        return repository.findById(id)
                 .map(u -> {
                     u.setNome(requestDto.nome());
                     u.setEmail(requestDto.email());
                     u.setContato(requestDto.contato());
-                    return usuarioRepository.save(u);
+                    return mapStruct.converterParaResponseDto(mapStruct.converterParaRequestDto(repository.save(u)));
                 }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possivel atualizar, usuario não identificado. Id: " + id));
     }
 
     @Transactional
     public void deletar(Long id) {
-        if (!usuarioRepository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new EntidadeNaoEncontradaException("Não foi possivel deletar! usuario não identificado. Id: " + id);
         }
-        usuarioRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     public List<UsuarioResponseDto> listar() {
-        return usuarioMapStruct.converterListaParaResponseDto(usuarioRepository.findAll());
+        return mapStruct.converterListaParaResponseDto(repository.findAll());
     }
 
     public List<UsuarioResponseDto> listarPorNome(String nome) {
-        return usuarioRepository.findByNomeContainingIgnoreCase(nome);
+        return mapStruct.converterListaParaResponseDto(repository.findByNomeContainingIgnoreCase(nome));
     }
 
     public UsuarioResponseDto buscar(Long id) {
-        return usuarioMapStruct.converterParaResponseDto(
-                usuarioMapStruct.converterParaRequestDto(
-                        usuarioRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi posível retornar um usuario, identificador não existe. Id: " + id))
+        return mapStruct.converterParaResponseDto(
+                mapStruct.converterParaRequestDto(
+                        repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi posível retornar um usuario, identificador não existe. Id: " + id))
                 )
         );
     }

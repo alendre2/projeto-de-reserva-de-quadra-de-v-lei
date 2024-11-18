@@ -27,8 +27,8 @@ public class UsuarioController {
     }
 
     @PutMapping(value = "/{usuarioId}")
-    public ResponseEntity<Void> atualizar(@PathVariable Long usuarioId, @Valid @RequestBody UsuarioRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UsuarioResponseDto> atualizar(@PathVariable Long usuarioId, @Valid @RequestBody UsuarioRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.atualizar(usuarioId, requestDto));
     }
 
     @DeleteMapping(value = "/{usuarioId}")

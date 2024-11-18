@@ -25,7 +25,7 @@ public class Equipe implements Serializable {
     @JoinColumn(name = "aluguel_id", nullable = false)
     private Aluguel aluguels;
 
-    @OneToMany
+    @OneToMany(mappedBy = "equipe")
     private final List<Jogador> jogadores = new ArrayList<>();
 
     public Equipe() {

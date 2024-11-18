@@ -22,4 +22,6 @@ public interface UsuarioMapStruct {
     UsuarioResponseDto converterParaResponseDto(UsuarioRequestDto usuarioRequestDto);
 
     List<UsuarioResponseDto> converterListaParaResponseDto(List<Usuario> usuarios);
+
+    //List<Usuario> converterParaListaEntidade()
 }
