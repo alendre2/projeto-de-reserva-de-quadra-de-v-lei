@@ -30,6 +30,7 @@ public class UsuarioService {
         );
     }
 
+
     @Transactional
     public UsuarioResponseDto atualizar(Long id, UsuarioRequestDto requestDto) {
         return repository.findById(id)

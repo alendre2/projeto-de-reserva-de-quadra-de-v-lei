@@ -61,12 +61,20 @@ public class Jogador implements Serializable {
         this.contato = contato;
     }
 
-    public StatusJogador getPlayerStatus() {
+    public StatusJogador getStatusJogador() {
         return statusJogador;
     }
 
-    public void setPlayerStatus(StatusJogador statusJogador) {
+    public void setStatusJogador(StatusJogador statusJogador) {
         this.statusJogador = statusJogador;
+    }
+
+    public Equipe getEquipe() {
+        return equipe;
+    }
+
+    public void setEquipe(Equipe equipe) {
+        this.equipe = equipe;
     }
 
     @Override

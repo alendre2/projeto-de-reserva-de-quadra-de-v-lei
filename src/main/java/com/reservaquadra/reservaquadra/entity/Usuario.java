@@ -1,5 +1,6 @@
 package com.reservaquadra.reservaquadra.entity;
 
+import com.reservaquadra.reservaquadra.enums.TipoUsuario;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -25,13 +26,17 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String contato;
 
+    @Enumerated(EnumType.STRING)
+    private TipoUsuario tipoUsuario;
+
     public Usuario() {
     }
 
-    public Usuario(String nome, String email, String contato) {
+    public Usuario(String nome, String email, String contato, TipoUsuario tipoUsuario) {
         this.nome = nome;
         this.email = email;
         this.contato = contato;
+        this.tipoUsuario = tipoUsuario;
     }
 
     public Long getId() {
@@ -62,18 +67,12 @@ public class Usuario implements Serializable {
         this.contato = contato;
     }
 
-    public enum admin {
-        ADMINISTRADOR(1L);
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
 
-        private final long id;
-
-        admin(long id) {
-            this.id = id;
-        }
-
-        public long getId() {
-            return id;
-        }
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     @Override
