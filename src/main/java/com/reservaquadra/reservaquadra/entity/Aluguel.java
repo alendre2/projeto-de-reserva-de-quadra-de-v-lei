@@ -39,7 +39,8 @@ public class Aluguel implements Serializable {
     @JoinColumn(name = "quadra_id")
     private Quadra quadra;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "tb_alugueis_equipes", joinColumns = @JoinColumn(name = "aluguel_id"), inverseJoinColumns = @JoinColumn(name = "equipe_id"))
     private final List<Equipe> equipes = new ArrayList<>();
 
     public Aluguel() {

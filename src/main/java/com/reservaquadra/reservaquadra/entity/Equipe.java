@@ -1,5 +1,6 @@
 package com.reservaquadra.reservaquadra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -21,12 +22,11 @@ public class Equipe implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "aluguel_id", nullable = false)
-    private Aluguel aluguels;
+    @ManyToMany(mappedBy = "equipes")
+    private final List<Aluguel> aluguels = new ArrayList<>();
 
     @OneToMany(mappedBy = "equipe")
-    private final List<Jogador> jogadores = new ArrayList<>();
+    private final List<Usuario> usuarios = new ArrayList<>();
 
     public Equipe() {
     }
@@ -47,16 +47,13 @@ public class Equipe implements Serializable {
         this.nome = nome;
     }
 
-    public Aluguel getAluguels() {
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    @JsonIgnore
+    public List<Aluguel> getAluguels() {
         return aluguels;
-    }
-
-    public void setAluguels(Aluguel aluguels) {
-        this.aluguels = aluguels;
-    }
-
-    public List<Jogador> getJogadores() {
-        return jogadores;
     }
 
     @Override

@@ -29,6 +29,10 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
 
+    @ManyToOne
+    @JoinColumn(name = "equipe_id")
+    private Equipe equipe;
+
     public Usuario() {
     }
 
@@ -65,6 +69,14 @@ public class Usuario implements Serializable {
 
     public void setContato(String contato) {
         this.contato = contato;
+    }
+
+    public Equipe getEquipe() {
+        return equipe;
+    }
+
+    public void setEquipe(Equipe equipe) {
+        this.equipe = equipe;
     }
 
     public TipoUsuario getTipoUsuario() {
