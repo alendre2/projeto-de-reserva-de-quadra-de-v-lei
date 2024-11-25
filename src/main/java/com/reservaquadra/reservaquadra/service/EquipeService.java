@@ -53,40 +53,55 @@ public class EquipeService {
         return mapStruct.listarEquipeDto(repository.findAll());
     }
 
-    public EquipeDto buscarPorId(Long id){
+    public EquipeDto buscarPorId(Long id) {
         return mapStruct.converterParaDto(repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com o id: " + id + ", não foi encontrado.")));
     }
 
+
+   //Funcoes abaixo entre Usuario/Equipe.
+
     @Transactional
     public EquipeDto adicionarAtleta(Long equipeId, Long usuarioId) {
-        Equipe equipe = repository.findById(equipeId).orElseThrow(() -> new EntidadeNaoEncontradaException("Equipe com identificador: " + equipeId + ", não foi encontrado."));
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com identificador: " + usuarioId + "não foi encontrado."));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .map(u -> {
+                    if (verificarSeUsuarioEstaEmOutraEquipe(u)) {
+                        throw new UsuarioContemUmaEquipeException("Usuário já está registrado em outra equipe. ");
+                    }
+                    u.setEquipe(repository.findById(equipeId).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível encontrar a equipe, ID: " + equipeId)));
+                    return usuarioRepository.save(u);
+                }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível salvar o usuário em uma equipe. Usuário não encontrado: " + usuarioId));
 
-        verificarSeUsuarioNaoEstaEmOutraEquipe(usuario, equipe);
-        verificarDuplicacaoDeUsuario(equipe, usuario);
+        return mapStruct.converterParaDto(repository.findById(equipeId).map(e -> {
+            if (verificarDuplicacaoDeUsuario(e, usuario)){
+                throw new UsuarioJaEstaNaEquipeException("Usuário já está cadastrado nesta equipe: " + e.getNome());
+            }
+            e.getUsuarios().add(usuario);
+            return repository.save(e);
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possivel adicionar o atleta: " + usuario.getNome() + ", equipe não existe.")));
 
-        equipe.getUsuarios().add(usuario);
-        return mapStruct.converterParaDto(repository.save(equipe));
     }
 
     @Transactional
     public void removerAtleta(Long equipeId, Long usuarioId) {
-        Equipe equipe = repository.findById(equipeId).orElseThrow(() -> new EntidadeNaoEncontradaException(""));
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new EntidadeNaoEncontradaException(""));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .map(u -> {
+                    u.setEquipe(null);
+                    return usuarioRepository.save(u);
+                }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível remover o atleta, usuario não está cadastrado."));
 
-        equipe.getUsuarios().remove(usuario);
-        repository.save(equipe);
+        repository.findById(equipeId).map(e -> {
+            e.getUsuarios().remove(usuario);
+            return repository.save(e);
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível remover o atleta, equipe não existe."));
     }
 
-    public void verificarSeUsuarioNaoEstaEmOutraEquipe(Usuario usuario, Equipe equipe) {
-        if (usuario.getEquipe() != null && !usuario.getEquipe().getId().equals(equipe.getId())) {
-            throw new UsuarioContemUmaEquipeException("Usuário com identificador: " + usuario.getId() + ", já está cadastrado na equipe: " + equipe.getNome());
-        }
+    //Metodo auxiliar
+    public boolean verificarSeUsuarioEstaEmOutraEquipe(Usuario usuario) {
+        return repository.findAll().stream().anyMatch(e -> e.getUsuarios().contains(usuario));
     }
 
-    public void verificarDuplicacaoDeUsuario(Equipe equipe, Usuario usuario) {
-        if (equipe.getUsuarios().stream().anyMatch(u -> u.getId().equals(usuario.getId()))) {
-            throw new UsuarioJaEstaNaEquipeException("Usuário já está registrado na equipe: " + equipe.getNome());
-        }
+    //Metodo auxiliar
+    public boolean verificarDuplicacaoDeUsuario(Equipe equipe, Usuario usuario) {
+        return equipe.getUsuarios().stream().anyMatch(u -> u.getId().equals(usuario.getId()));
     }
 }
