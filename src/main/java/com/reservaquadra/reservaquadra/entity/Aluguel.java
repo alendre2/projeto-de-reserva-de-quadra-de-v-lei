@@ -35,23 +35,18 @@ public class Aluguel implements Serializable {
     @ManyToOne
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "quadra_id")
-    private Quadra quadra;
-
     @ManyToMany
-    @JoinTable(name = "tb_alugueis_equipes", joinColumns = @JoinColumn(name = "aluguel_id"), inverseJoinColumns = @JoinColumn(name = "equipe_id"))
-    private final List<Equipe> equipes = new ArrayList<>();
+    @JoinTable(name = "tb_aluguel_quadra", joinColumns = @JoinColumn(name = "aluguel_id"), inverseJoinColumns = @JoinColumn(name = "quadra_id"))
+    private final List<Quadra> quadras = new ArrayList<>();
 
     public Aluguel() {
     }
 
-    public Aluguel(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFinal, Usuario usuario, Quadra quadra) {
+    public Aluguel(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFinal, Usuario usuario) {
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFinal = dataHoraFinal;
         this.valor = valorAluguel(dataHoraInicio, dataHoraFinal);
         this.usuario = usuario;
-        this.quadra = quadra;
     }
 
     public Long getId() {
@@ -90,16 +85,8 @@ public class Aluguel implements Serializable {
         this.usuario = usuario;
     }
 
-    public Quadra getQuadra() {
-        return quadra;
-    }
-
-    public void setQuadra(Quadra quadra) {
-        this.quadra = quadra;
-    }
-
-    public List<Equipe> getEquipes() {
-        return equipes;
+    public List<Quadra> getQuadras() {
+        return quadras;
     }
 
     public BigDecimal valorAluguel(LocalDateTime inicio, LocalDateTime fim) {

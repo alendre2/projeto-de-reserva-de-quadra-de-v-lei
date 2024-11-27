@@ -1,9 +1,6 @@
 package com.reservaquadra.reservaquadra.controller.handlerException;
 
-import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
-import com.reservaquadra.reservaquadra.exception.StatusDeJogadorNaoExisteException;
-import com.reservaquadra.reservaquadra.exception.UsuarioContemUmaEquipeException;
-import com.reservaquadra.reservaquadra.exception.UsuarioJaEstaNaEquipeException;
+import com.reservaquadra.reservaquadra.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +12,14 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ManipuladorException {
+
+    @ExceptionHandler(EncerrarPartidaException.class)
+    public ResponseEntity<PadraoDeErro> encerrarPartidaException(EncerrarPartidaException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.OK;
+        String erro = "Partida encerrada.";
+        PadraoDeErro padraoDeErro = new PadraoDeErro(LocalDateTime.now(), status.value(), erro, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(padraoDeErro);
+    }
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<PadraoDeErro> entidadeNaoEncontradaExceptionResponseEntity(EntidadeNaoEncontradaException e, HttpServletRequest request) {

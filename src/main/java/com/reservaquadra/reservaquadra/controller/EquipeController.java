@@ -46,7 +46,7 @@ public class EquipeController {
         return ResponseEntity.status(HttpStatus.OK).body(equipeService.buscarPorId(id));
     }
 
-    @PostMapping(value = "/{equipeId/usuario/{usuarioId}")
+    @PostMapping(value = "/{equipeId}/usuario/{usuarioId}")
     public ResponseEntity<EquipeDto> adicionarAtleta(@PathVariable Long equipeId, @PathVariable Long usuarioId) {
         return ResponseEntity.status(HttpStatus.OK).body(equipeService.adicionarAtleta(equipeId, usuarioId));
     }

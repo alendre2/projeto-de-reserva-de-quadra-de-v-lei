@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,30 +19,27 @@ public class Quadra implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
-    @Column
+    @Column(nullable = false)
     private String tipo;
 
     @ManyToOne
+    @JoinColumn(name = "endereco_quadra_id")
     private EnderecoQuadra enderecoQuadra;
 
-    @ManyToOne
-    private Usuario usuario;
-
-    @OneToMany(mappedBy = "quadra")
-    private List<Aluguel> aluguels;
+    @ManyToMany(mappedBy = "quadras")
+    private final List<Aluguel> aluguels = new ArrayList<>();
 
     public Quadra() {
     }
 
-    public Quadra(Long id, String nome, String tipo, EnderecoQuadra enderecoQuadra, Usuario usuario) {
+    public Quadra(Long id, String nome, String tipo, EnderecoQuadra enderecoQuadra) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.enderecoQuadra = enderecoQuadra;
-        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -70,14 +68,6 @@ public class Quadra implements Serializable {
 
     public void setEnderecoQuadra(EnderecoQuadra enderecoQuadra) {
         this.enderecoQuadra = enderecoQuadra;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public List<Aluguel> getAluguels() {

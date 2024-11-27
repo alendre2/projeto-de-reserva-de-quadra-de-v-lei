@@ -17,6 +17,7 @@ public interface EquipeMapStruct {
     EquipeDto converterParaDto(Equipe equipe);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "usuarios", ignore = true)
     Equipe converterParaEntidade(EquipeDto dto);
 
     List<EquipeDto> listarEquipeDto(List<Equipe> equipes);
