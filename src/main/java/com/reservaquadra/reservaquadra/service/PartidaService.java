@@ -13,6 +13,8 @@ import com.reservaquadra.reservaquadra.repository.PartidaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class PartidaService {
 
@@ -39,31 +41,27 @@ public class PartidaService {
     }
 
     @Transactional
-    public PartidaResponseDto pontoEquipeUm(Long partidaId) {
-        return mapStruct.converterParaRespostaDto(repository.findById(partidaId).map(
-                e -> {
-                    e.setPontoEquipeUm(e.getPontoEquipeUm() + 1);
-                    return repository.save(e);
-                }
-        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível registrar o ponto da equipe um, partida não encontrada.")));
-    }
+    public PartidaResponseDto iniciarPartida(Long partidaId) {
+        Partida partida = repository.findById(partidaId).orElseThrow(() -> new EntidadeNaoEncontradaException(""));
+        Random random = new Random();
 
-    @Transactional
-    public PartidaResponseDto pontoEquipeDois(Long partidaId) {
-        return mapStruct.converterParaRespostaDto(repository.findById(partidaId).map(
-                e -> {
-                    e.setPontoEquipeDois(e.getPontoEquipeDois() + 1);
-                    return repository.save(e);
-                }
-        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível registrar o ponto da equipe dois, partida não encontrada.")));
+        while (encerrarPartida(partida)) {
+            int equipePonto = random.nextInt(2);
+            if (equipePonto == 0) {
+                partida.adicionarPontoEquipeUm();
+            } else {
+                partida.adicionarPontoEquipeDois();
+            }
+        }
+        return mapStruct.converterParaRespostaDto(repository.save(partida));
     }
 
     //Metodo auxiliar
-    public boolean encerrarPartida(Equipe equipeUm, Equipe equipeDois) {
-        if (equipeUm.getPartida().getPontoEquipeUm() == 25) {
-            throw new EncerrarPartidaException("Equipe: " + equipeUm.getNome() + ", foi o vencedor da partida!");
-        } else if (equipeDois.getPartida().getPontoEquipeDois() == 25) {
-            throw new EncerrarPartidaException("Equipe: " + equipeDois.getNome() + ", foi o vencedor da partida!");
+    public boolean encerrarPartida(Partida partida) {
+        if (partida.getPontoEquipeUm() == 25) {
+            throw new EncerrarPartidaException("Equipe: " + partida.getEquipe1().getNome() + ", foi o vencedor da partida!");
+        } else if (partida.getPontoEquipeDois() == 25) {
+            throw new EncerrarPartidaException("Equipe: " + partida.getEquipe2().getNome() + ", foi o vencedor da partida!");
         }
         return true;
     }

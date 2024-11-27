@@ -24,13 +24,8 @@ public class PartidaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(partidaService.criar(aluguelId, equipeUm, equipeDois));
     }
 
-    @PutMapping(value = "/equipeUm/{partidaId}")
-    public ResponseEntity<PartidaResponseDto> pontoEquipeUm(@PathVariable Long partidaId) {
-        return ResponseEntity.status(HttpStatus.OK).body(partidaService.pontoEquipeUm(partidaId));
-    }
-
-    @PutMapping(value = "/equipeDois/{partidaId}")
-    public ResponseEntity<PartidaResponseDto> pontoEquipeDois(@PathVariable Long partidaId) {
-        return ResponseEntity.status(HttpStatus.OK).body(partidaService.pontoEquipeDois(partidaId));
+    @PostMapping(value = "/{partidaId}/adicionar_ponto")
+    public ResponseEntity<PartidaResponseDto> adicionarPonto(@PathVariable Long partidaId) {
+        return ResponseEntity.status(HttpStatus.OK).body(partidaService.iniciarPartida(partidaId));
     }
 }

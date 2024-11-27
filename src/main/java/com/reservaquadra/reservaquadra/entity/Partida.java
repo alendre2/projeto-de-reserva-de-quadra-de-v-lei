@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "tb_partida")
@@ -18,29 +16,24 @@ public class Partida implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Long pontoEquipeUm;
+    private Long pontoEquipeUm = 0L;
 
     @Column(nullable = false)
-    private Long pontoEquipeDois;
+    private Long pontoEquipeDois = 0L;
 
-    @Column(nullable = false)
+    @ManyToOne(optional = false)
     private Equipe equipe1;
 
-    @Column(nullable = false)
+    @ManyToOne(optional = false)
     private Equipe equipe2;
 
-    @OneToMany(mappedBy = "partida")
-    private final List<Equipe> equipes = new ArrayList<>();
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Aluguel aluguel;
 
     public Partida() {
     }
 
     public Partida(Equipe equipe1, Equipe equipe2, Aluguel aluguel) {
-        this.pontoEquipeUm = 0L;
-        this.pontoEquipeDois = 0L;
         this.equipe1 = equipe1;
         this.equipe2 = equipe2;
         this.aluguel = aluguel;
@@ -82,15 +75,19 @@ public class Partida implements Serializable {
         this.equipe2 = equipe2;
     }
 
-    public List<Equipe> getEquipes() {
-        return equipes;
-    }
-
     public Aluguel getAluguel() {
         return aluguel;
     }
 
     public void setAluguel(Aluguel aluguel) {
         this.aluguel = aluguel;
+    }
+
+    public void adicionarPontoEquipeUm() {
+        this.pontoEquipeUm++;
+    }
+
+    public void adicionarPontoEquipeDois() {
+        this.pontoEquipeDois++;
     }
 }

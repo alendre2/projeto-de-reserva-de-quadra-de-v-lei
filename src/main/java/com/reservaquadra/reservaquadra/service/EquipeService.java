@@ -78,7 +78,6 @@ public class EquipeService {
             e.getUsuarios().add(usuario);
             return repository.save(e);
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possivel adicionar o atleta: " + usuario.getNome() + ", equipe não existe.")));
-
     }
 
     @Transactional

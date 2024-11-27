@@ -1,5 +1,6 @@
 package com.reservaquadra.reservaquadra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.reservaquadra.reservaquadra.enums.TipoUsuario;
 import jakarta.persistence.*;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Table(name = "tb_usuario")
 public class Usuario implements Serializable {
 
     @Serial
@@ -71,6 +73,7 @@ public class Usuario implements Serializable {
         this.contato = contato;
     }
 
+    @JsonIgnore
     public Equipe getEquipe() {
         return equipe;
     }
