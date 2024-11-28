@@ -1,5 +1,6 @@
 package com.reservaquadra.reservaquadra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -50,6 +51,7 @@ public class Equipe implements Serializable {
         return usuarios;
     }
 
+    @JsonIgnore
     public Partida getPartida() {
         return partida;
     }

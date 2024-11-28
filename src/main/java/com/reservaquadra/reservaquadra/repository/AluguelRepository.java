@@ -1,17 +1,17 @@
 package com.reservaquadra.reservaquadra.repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
+import com.reservaquadra.reservaquadra.entity.Aluguel;
+import com.reservaquadra.reservaquadra.enums.StatusAluguel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.reservaquadra.reservaquadra.entity.Aluguel;
+import java.util.List;
 
 @Repository
 public interface AluguelRepository extends JpaRepository<Aluguel, Long> {
 
-
-    List<Aluguel> findByDataHoraInicioBetween(LocalDateTime inicio, LocalDateTime fim);
+    @Query("SELECT a FROM Aluguel a WHERE a.statusAluguel = :statusAluguel")
+    List<Aluguel> findByStatusAluguel(@Param("statusAluguel")StatusAluguel statusAluguel);
 }

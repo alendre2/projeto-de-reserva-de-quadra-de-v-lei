@@ -1,7 +1,9 @@
 package com.reservaquadra.reservaquadra.mapStruct;
 
 import com.reservaquadra.reservaquadra.dto.entityDto.EquipeDto;
+import com.reservaquadra.reservaquadra.dto.responseDto.UsuarioResponseDto;
 import com.reservaquadra.reservaquadra.entity.Equipe;
+import com.reservaquadra.reservaquadra.entity.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -14,6 +16,7 @@ import java.util.List;
 public interface EquipeMapStruct {
 
     @Mapping(target = "Equipe.id", ignore = true)
+    @Mapping(target = "usuarios", source = "usuarios")
     EquipeDto converterParaDto(Equipe equipe);
 
     @Mapping(target = "id", ignore = true)
@@ -22,4 +25,6 @@ public interface EquipeMapStruct {
     Equipe converterParaEntidade(EquipeDto dto);
 
     List<EquipeDto> listarEquipeDto(List<Equipe> equipes);
+
+    List<UsuarioResponseDto> listarUsuarioResponseDto(List<Usuario> usuarios);
 }

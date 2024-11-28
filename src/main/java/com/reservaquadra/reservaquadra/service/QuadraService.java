@@ -1,52 +1,59 @@
 package com.reservaquadra.reservaquadra.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.reservaquadra.reservaquadra.dto.requestDto.QuadraRequestDto;
+import com.reservaquadra.reservaquadra.dto.requestDto.QuadraTipoDto;
+import com.reservaquadra.reservaquadra.dto.responseDto.QuadraResponseDto;
+import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
+import com.reservaquadra.reservaquadra.mapStruct.QuadraMapStruct;
+import com.reservaquadra.reservaquadra.repository.QuadraRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.reservaquadra.reservaquadra.entity.Quadra;
-import com.reservaquadra.reservaquadra.exception.EntidadeEmUsoException;
-import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
-import com.reservaquadra.reservaquadra.repository.QuadraRepository;
-
-import jakarta.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class QuadraService {
 
-    @Autowired
-    private QuadraRepository quadraRepository;
+    private final QuadraRepository repository;
+    private final QuadraMapStruct mapStruct;
 
-    public List<Quadra> listar() {
-        return quadraRepository.findAll();
-    }
-
-    public Quadra buscarOuFalhar(Long id) {
-        return quadraRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format("Não existe um cadastro de Quadra com o código %d.", id)));
+    public QuadraService(QuadraRepository repository, QuadraMapStruct mapStruct) {
+        this.repository = repository;
+        this.mapStruct = mapStruct;
     }
 
     @Transactional
-    public Quadra salvar(Quadra quadra) {
-        return quadraRepository.save(quadra);
+    public QuadraResponseDto criar(QuadraRequestDto dto) {
+        return mapStruct.converterParaResponse(repository.save(mapStruct.converterParaEntidade(dto)));
+    }
+
+
+    @Transactional
+    public QuadraResponseDto atualizarTipo(Long quadraId, QuadraTipoDto dto) {
+        return repository.findById(quadraId).map(q -> {
+            q.setTipo(dto.tipo());
+            return mapStruct.converterParaResponse(q);
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível atualizar o tipo da quadra. Id: " + quadraId));
     }
 
     @Transactional
-    public void remover(Long id) {
-        try {
-            Quadra quadra = buscarOuFalhar(id);
-            quadraRepository.deleteById(id);
-            quadraRepository.flush();
-        } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(
-                    String.format("Quadra de código %d não pode ser removida, pois está em uso.", id));
+    public void deletar(Long quadraId) {
+        if (!repository.existsById(quadraId)) {
+            throw new EntidadeNaoEncontradaException("Não foi possível deletar, quadra não existe. Id: " + quadraId);
         }
+        repository.deleteById(quadraId);
     }
-    
-    public List<Quadra> buscarNome(String nome){
-		return quadraRepository.findByNome(nome);
-	}
+
+    public List<QuadraResponseDto> listar() {
+        return mapStruct.converterListaParaResponseDto(repository.findAll());
+    }
+
+    public List<QuadraResponseDto> listarPeloTipo(String tipo) {
+        return mapStruct.converterListaParaResponseDto(repository.findByTipo(tipo));
+    }
+
+    public QuadraResponseDto buscarPorId(Long quadraId) {
+        return mapStruct.converterParaResponse(repository.findById(quadraId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível encontrar uma quadra. Id: " + quadraId)));
+    }
 }

@@ -22,12 +22,12 @@ public class EquipeController {
 
     @PostMapping
     public ResponseEntity<EquipeDto> criar(@Valid @RequestBody EquipeDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(equipeService.criar(dto));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<EquipeDto> atualizar(@PathVariable Long id, @Valid @RequestBody EquipeDto dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(equipeService.atualizar(id, dto));
     }
 
     @DeleteMapping(value = "/{id}")

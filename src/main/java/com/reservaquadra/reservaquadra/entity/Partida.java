@@ -16,10 +16,10 @@ public class Partida implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Long pontoEquipeUm = 0L;
+    private Long pontoEquipeUm;
 
     @Column(nullable = false)
-    private Long pontoEquipeDois = 0L;
+    private Long pontoEquipeDois;
 
     @ManyToOne(optional = false)
     private Equipe equipe1;
@@ -34,6 +34,8 @@ public class Partida implements Serializable {
     }
 
     public Partida(Equipe equipe1, Equipe equipe2, Aluguel aluguel) {
+        this.pontoEquipeUm = 0L;
+        this.pontoEquipeDois = 0L;
         this.equipe1 = equipe1;
         this.equipe2 = equipe2;
         this.aluguel = aluguel;
@@ -83,11 +85,4 @@ public class Partida implements Serializable {
         this.aluguel = aluguel;
     }
 
-    public void adicionarPontoEquipeUm() {
-        this.pontoEquipeUm++;
-    }
-
-    public void adicionarPontoEquipeDois() {
-        this.pontoEquipeDois++;
-    }
 }

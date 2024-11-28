@@ -11,3 +11,5 @@ INSERT INTO tb_usuario(nome, email, contato, tipo_usuario) VALUES
 ('Sofia', 'sofia@gmail.com', '81989012345', 'ADMINISTRADOR'),
 ('Felipe', 'felipe@gmail.com', '81990123456', 'JOGADOR'),
 ('Camila', 'camila@gmail.com', '81901234567', 'ADMINISTRADOR');
+
+INSERT INTO tb_equipe(nome) VALUES('Real Madrid'), ('Barcelona');

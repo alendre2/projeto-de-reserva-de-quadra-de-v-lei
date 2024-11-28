@@ -4,7 +4,6 @@ import com.reservaquadra.reservaquadra.dto.responseDto.PartidaResponseDto;
 import com.reservaquadra.reservaquadra.entity.Aluguel;
 import com.reservaquadra.reservaquadra.entity.Equipe;
 import com.reservaquadra.reservaquadra.entity.Partida;
-import com.reservaquadra.reservaquadra.exception.EncerrarPartidaException;
 import com.reservaquadra.reservaquadra.exception.EntidadeNaoEncontradaException;
 import com.reservaquadra.reservaquadra.mapStruct.PartidaMapStruct;
 import com.reservaquadra.reservaquadra.repository.AluguelRepository;
@@ -13,6 +12,7 @@ import com.reservaquadra.reservaquadra.repository.PartidaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -42,27 +42,24 @@ public class PartidaService {
 
     @Transactional
     public PartidaResponseDto iniciarPartida(Long partidaId) {
-        Partida partida = repository.findById(partidaId).orElseThrow(() -> new EntidadeNaoEncontradaException(""));
+        Partida partida = repository.findById(partidaId).orElseThrow(() -> new EntidadeNaoEncontradaException("Partida não encontrada!"));
         Random random = new Random();
 
-        while (encerrarPartida(partida)) {
+        partida.getEquipe1().setPartida(partida);
+        partida.getEquipe2().setPartida(partida);
+
+        while (partida.getPontoEquipeUm() <= 25 && partida.getPontoEquipeDois() <= 25) {
             int equipePonto = random.nextInt(2);
             if (equipePonto == 0) {
-                partida.adicionarPontoEquipeUm();
+                partida.setPontoEquipeUm(partida.getPontoEquipeUm() + 1L);
             } else {
-                partida.adicionarPontoEquipeDois();
+                partida.setPontoEquipeDois(partida.getPontoEquipeDois() + 1L);
             }
         }
         return mapStruct.converterParaRespostaDto(repository.save(partida));
     }
 
-    //Metodo auxiliar
-    public boolean encerrarPartida(Partida partida) {
-        if (partida.getPontoEquipeUm() == 25) {
-            throw new EncerrarPartidaException("Equipe: " + partida.getEquipe1().getNome() + ", foi o vencedor da partida!");
-        } else if (partida.getPontoEquipeDois() == 25) {
-            throw new EncerrarPartidaException("Equipe: " + partida.getEquipe2().getNome() + ", foi o vencedor da partida!");
-        }
-        return true;
+    public List<PartidaResponseDto> listar() {
+        return mapStruct.converterParaListaResponse(repository.findAll());
     }
 }

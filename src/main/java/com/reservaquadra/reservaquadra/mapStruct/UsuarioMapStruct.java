@@ -17,6 +17,7 @@ public interface UsuarioMapStruct {
     @Mapping(target = "Usuario.id", ignore = true)
     UsuarioRequestDto converterParaRequestDto(Usuario usuario);
 
+    @Mapping(target = "equipe", ignore = true)
     Usuario converterParaUsuario(UsuarioRequestDto usuarioRequestDto);
 
     UsuarioResponseDto converterParaResponseDto(UsuarioRequestDto usuarioRequestDto);

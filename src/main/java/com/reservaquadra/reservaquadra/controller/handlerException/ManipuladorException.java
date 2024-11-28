@@ -2,6 +2,7 @@ package com.reservaquadra.reservaquadra.controller.handlerException;
 
 import com.reservaquadra.reservaquadra.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -57,6 +58,30 @@ public class ManipuladorException {
     public ResponseEntity<PadraoDeErro> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String erro = "Erro ao validar argumento, verifique sua requisição novamente.";
+        PadraoDeErro padraoDeErro = new PadraoDeErro(LocalDateTime.now(), status.value(), erro, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(padraoDeErro);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<PadraoDeErro> dataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String erro = "Não foi possível executar a requisição, erro interno no banco de dados.";
+        PadraoDeErro padraoDeErro = new PadraoDeErro(LocalDateTime.now(), status.value(), erro, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(padraoDeErro);
+    }
+
+    @ExceptionHandler(ConflitoNoAluguelException.class)
+    public ResponseEntity<PadraoDeErro> conflitoNoAluguelException(ConflitoNoAluguelException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String erro = "Não foi possível efetuar uma reserva, horário já está ocupado.";
+        PadraoDeErro padraoDeErro = new PadraoDeErro(LocalDateTime.now(), status.value(), erro, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(padraoDeErro);
+    }
+
+    @ExceptionHandler(ConflitoDataHoraException.class)
+    public ResponseEntity<PadraoDeErro> conflitoNoAluguelException(ConflitoDataHoraException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String erro = "Horario de inicio não pode ser após o encerramento.";
         PadraoDeErro padraoDeErro = new PadraoDeErro(LocalDateTime.now(), status.value(), erro, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(padraoDeErro);
     }

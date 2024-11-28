@@ -59,7 +59,6 @@ public class EquipeService {
 
 
    //Funcoes abaixo entre Usuario/Equipe.
-
     @Transactional
     public EquipeDto adicionarAtleta(Long equipeId, Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)

@@ -22,10 +22,10 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 14)
     private String contato;
 
     @Enumerated(EnumType.STRING)

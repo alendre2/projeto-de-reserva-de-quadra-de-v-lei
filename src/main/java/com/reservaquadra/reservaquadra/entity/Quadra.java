@@ -25,21 +25,16 @@ public class Quadra implements Serializable {
     @Column(nullable = false)
     private String tipo;
 
-    @ManyToOne
-    @JoinColumn(name = "endereco_quadra_id")
-    private EnderecoQuadra enderecoQuadra;
-
     @ManyToMany(mappedBy = "quadras")
     private final List<Aluguel> aluguels = new ArrayList<>();
 
     public Quadra() {
     }
 
-    public Quadra(Long id, String nome, String tipo, EnderecoQuadra enderecoQuadra) {
+    public Quadra(Long id, String nome, String tipo) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
-        this.enderecoQuadra = enderecoQuadra;
     }
 
     public Long getId() {
@@ -62,13 +57,6 @@ public class Quadra implements Serializable {
         this.tipo = tipo;
     }
 
-    public EnderecoQuadra getEnderecoQuadra() {
-        return enderecoQuadra;
-    }
-
-    public void setEnderecoQuadra(EnderecoQuadra enderecoQuadra) {
-        this.enderecoQuadra = enderecoQuadra;
-    }
 
     public List<Aluguel> getAluguels() {
         return aluguels;

@@ -1,13 +1,12 @@
 package com.reservaquadra.reservaquadra.entity;
 
+import com.reservaquadra.reservaquadra.enums.StatusAluguel;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +34,9 @@ public class Aluguel implements Serializable {
     @ManyToOne
     private Usuario usuario;
 
+    @Enumerated(EnumType.STRING)
+    private StatusAluguel statusAluguel;
+
     @ManyToMany
     @JoinTable(name = "tb_aluguel_quadra", joinColumns = @JoinColumn(name = "aluguel_id"), inverseJoinColumns = @JoinColumn(name = "quadra_id"))
     private final List<Quadra> quadras = new ArrayList<>();
@@ -42,11 +44,12 @@ public class Aluguel implements Serializable {
     public Aluguel() {
     }
 
-    public Aluguel(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFinal, Usuario usuario) {
+    public Aluguel(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFinal, BigDecimal valor, Usuario usuario, StatusAluguel statusAluguel) {
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFinal = dataHoraFinal;
-        this.valor = valorAluguel(dataHoraInicio, dataHoraFinal);
+        this.valor = valor;
         this.usuario = usuario;
+        this.statusAluguel = statusAluguel;
     }
 
     public Long getId() {
@@ -85,20 +88,18 @@ public class Aluguel implements Serializable {
         this.usuario = usuario;
     }
 
+    public StatusAluguel getStatusAluguel() {
+        return statusAluguel;
+    }
+
+    public void setStatusAluguel(StatusAluguel statusAluguel) {
+        this.statusAluguel = statusAluguel;
+    }
+
     public List<Quadra> getQuadras() {
         return quadras;
     }
 
-    public BigDecimal valorAluguel(LocalDateTime inicio, LocalDateTime fim) {
-        long converterParaMinutos = Duration.between(inicio, fim).toMinutes();
-        double converterParaHora = converterParaMinutos / 60.0;
-        LocalTime quatroDaTarde = LocalTime.of(16, 0);
-
-        if (inicio.toLocalTime().isBefore(quatroDaTarde) || fim.toLocalTime().isBefore(quatroDaTarde)) {
-            return BigDecimal.valueOf(converterParaHora * 70.0);
-        }
-        return BigDecimal.valueOf(converterParaHora * 80.0);
-    }
 
     @Override
     public boolean equals(Object o) {
